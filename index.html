@@ -47,7 +47,7 @@
                 translationElement.innerHTML = `<strong>${lang}:</strong> <span id="translation-${lang}">${translatedText}</span>`;
                 const copyButton = document.createElement('button');
                 copyButton.className = 'copy-button';
-                copyButton.innerText = 'Copy';
+                copyButton.innerText = 'Kopieren';
                 copyButton.onclick = () => copyToClipboard(`translation-${lang}`);
                 translationElement.appendChild(copyButton);
                 translationsDiv.appendChild(translationElement);
