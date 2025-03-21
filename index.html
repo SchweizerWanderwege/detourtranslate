@@ -21,6 +21,10 @@
         .translation {
             margin-bottom: 20px;
         }
+        .copy-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +44,12 @@
                 const translatedText = await fetchTranslation(inputText, lang);
                 const translationElement = document.createElement('div');
                 translationElement.className = 'translation';
-                translationElement.innerHTML = `<strong>${lang}:</strong> ${translatedText}`;
+                translationElement.innerHTML = `<strong>${lang}:</strong> <span id="translation-${lang}">${translatedText}</span>`;
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-button';
+                copyButton.innerText = 'Copy';
+                copyButton.onclick = () => copyToClipboard(`translation-${lang}`);
+                translationElement.appendChild(copyButton);
                 translationsDiv.appendChild(translationElement);
             }
         }
@@ -51,6 +60,17 @@
             const response = await fetch(url);
             const data = await response.json();
             return data.translations[0].text;
+        }
+
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            const tempInput = document.createElement("textarea");
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Copied: " + textToCopy);
         }
     </script>
 </body>
