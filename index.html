@@ -46,7 +46,7 @@
         }
 
         async function fetchTranslation(text, targetLang) {
-            const apiKey = 'YOUR_DEEPL_API_KEY';
+            const apiKey = '4e27932c-1559-4def-bf2a-9cbc7975badc:fx';
             const url = `https://api-free.deepl.com/v2/translate?auth_key=${apiKey}&text=${encodeURIComponent(text)}&target_lang=${targetLang}`;
             const response = await fetch(url);
             const data = await response.json();
