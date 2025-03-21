@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Language Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-bottom: 20px;
+        }
+        .translation {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Multi-Language Translator</h1>
+    <textarea id="inputText" placeholder="Enter text to translate..."></textarea>
+    <button onclick="translateText()">Translate</button>
+    <div id="translations"></div>
+
+    <script>
+        async function translateText() {
+            const inputText = document.getElementById('inputText').value;
+            const targetLanguages = ['DE', 'FR', 'ES']; // German, French, Spanish
+            const translationsDiv = document.getElementById('translations');
+            translationsDiv.innerHTML = '';
+
+            for (const lang of targetLanguages) {
+                const translatedText = await fetchTranslation(inputText, lang);
+                const translationElement = document.createElement('div');
+                translationElement.className = 'translation';
+                translationElement.innerHTML = `<strong>${lang}:</strong> ${translatedText}`;
+                translationsDiv.appendChild(translationElement);
+            }
+        }
+
+        async function fetchTranslation(text, targetLang) {
+            const apiKey = 'YOUR_DEEPL_API_KEY';
+            const url = `https://api-free.deepl.com/v2/translate?auth_key=${apiKey}&text=${encodeURIComponent(text)}&target_lang=${targetLang}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.translations[0].text;
+        }
+    </script>
+</body>
+</html>
