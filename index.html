@@ -25,14 +25,14 @@
 </head>
 <body>
     <h1>Multi-Language Translator</h1>
-    <textarea id="inputText" placeholder="Enter text to translate..."></textarea>
-    <button onclick="translateText()">Translate</button>
+    <textarea id="inputText" placeholder="Text zum Übersetzen eingeben.."></textarea>
+    <button onclick="translateText()">Übersetzen</button>
     <div id="translations"></div>
 
     <script>
         async function translateText() {
             const inputText = document.getElementById('inputText').value;
-            const targetLanguages = ['FR', 'IT', 'EN']; // German, French, Spanish
+            const targetLanguages = ['DE', 'FR', 'IT', 'EN']; // German, French, Italian, English
             const translationsDiv = document.getElementById('translations');
             translationsDiv.innerHTML = '';
 
