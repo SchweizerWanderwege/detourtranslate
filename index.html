@@ -9,10 +9,13 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+        .text-area-container {
+            margin-bottom: 20px;
+        }
         textarea {
             width: 100%;
             height: 100px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         button {
             padding: 10px 20px;
@@ -28,27 +31,43 @@
     </style>
 </head>
 <body>
-    <h1>Wegsperrungsübersetzer</h1>
-    <textarea id="inputText" placeholder="Text zum Übersetzen eingeben.."></textarea>
-    <button onclick="translateText()">Übersetzen</button>
-    <div id="translations"></div>
+    <h1>Wegsperrungen übersetzen</h1>
+    <div class="text-area-container">
+        <textarea id="inputText1" placeholder="Text zum Übersetzen eingeben.."></textarea>
+        <div id="translations1"></div>
+    </div>
+    <div class="text-area-container">
+        <textarea id="inputText2" placeholder="Text zum Übersetzen eingeben.."></textarea>
+        <div id="translations2"></div>
+    </div>
+    <div class="text-area-container">
+        <textarea id="inputText3" placeholder="Text zum Übersetzen eingeben.."></textarea>
+        <div id="translations3"></div>
+    </div>
+    <button onclick="translateAllTexts()">Übersetzen</button>
 
     <script>
-        async function translateText() {
-            const inputText = document.getElementById('inputText').value;
+        async function translateAllTexts() {
+            await translateText('inputText1', 'translations1');
+            await translateText('inputText2', 'translations2');
+            await translateText('inputText3', 'translations3');
+        }
+
+        async function translateText(inputId, translationsId) {
+            const inputText = document.getElementById(inputId).value;
             const targetLanguages = ['DE', 'FR', 'IT', 'EN']; // German, French, Italian, English
-            const translationsDiv = document.getElementById('translations');
+            const translationsDiv = document.getElementById(translationsId);
             translationsDiv.innerHTML = '';
 
             for (const lang of targetLanguages) {
                 const translatedText = await fetchTranslation(inputText, lang);
                 const translationElement = document.createElement('div');
                 translationElement.className = 'translation';
-                translationElement.innerHTML = `<strong>${lang}:</strong> <span id="translation-${lang}">${translatedText}</span>`;
+                translationElement.innerHTML = `<strong>${lang}:</strong> <span id="${translationsId}-${lang}">${translatedText}</span>`;
                 const copyButton = document.createElement('button');
                 copyButton.className = 'copy-button';
                 copyButton.innerText = 'Kopieren';
-                copyButton.onclick = () => copyToClipboard(`translation-${lang}`);
+                copyButton.onclick = () => copyToClipboard(`${translationsId}-${lang}`);
                 translationElement.appendChild(copyButton);
                 translationsDiv.appendChild(translationElement);
             }
@@ -70,7 +89,7 @@
             tempInput.select();
             document.execCommand("copy");
             document.body.removeChild(tempInput);
-            // Remove the allert statement
+            // Remove the alert statement
             // alert("Copied: " + textToCopy);
         }
     </script>
