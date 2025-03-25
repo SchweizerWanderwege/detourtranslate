@@ -28,6 +28,9 @@
             margin-left: 10px;
             padding: 5px 10px;
         }
+        .highlight {
+            background-color: yellow;
+        }
     </style>
 </head>
 <body>
@@ -47,6 +50,8 @@
     <button onclick="translateAllTexts()">Übersetzen</button>
 
     <script>
+        let lastCopiedButton = null;
+
         async function translateAllTexts() {
             await translateText('inputText1', 'translations1');
             await translateText('inputText2', 'translations2');
@@ -67,7 +72,7 @@
                 const copyButton = document.createElement('button');
                 copyButton.className = 'copy-button';
                 copyButton.innerText = 'Kopieren';
-                copyButton.onclick = () => copyToClipboard(`${translationsId}-${lang}`);
+                copyButton.onclick = () => copyToClipboard(`${translationsId}-${lang}`, copyButton);
                 translationElement.appendChild(copyButton);
                 translationsDiv.appendChild(translationElement);
             }
@@ -81,7 +86,7 @@
             return data.translations[0].text;
         }
 
-        function copyToClipboard(elementId) {
+        function copyToClipboard(elementId, copyButton) {
             const textToCopy = document.getElementById(elementId).innerText;
             const tempInput = document.createElement("textarea");
             tempInput.value = textToCopy;
@@ -89,8 +94,12 @@
             tempInput.select();
             document.execCommand("copy");
             document.body.removeChild(tempInput);
-            // Remove the alert statement
-            // alert("Copied: " + textToCopy);
+
+            if (lastCopiedButton) {
+                lastCopiedButton.classList.remove('highlight');
+            }
+            copyButton.classList.add('highlight');
+            lastCopiedButton = copyButton;
         }
     </script>
 </body>
