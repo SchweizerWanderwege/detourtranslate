@@ -79,24 +79,16 @@
         }
 
         async function fetchTranslation(text, targetLang) {
-    const apiKey = '4e27932c-1559-4def-bf2a-9cbc7975badc:fx';
-    const url = `https://api-free.deepl.com/v2/translate`;
-    const formData = new FormData();
-    formData.append('auth_key', apiKey);
-    formData.append('text', text);
-    formData.append('target_lang', targetLang);
+    const url = `https://deepl-proxy.herokuapp.com/translate`;
 
     try {
-        console.log('Sending request to DeepL API');
-        console.log('URL:', url);
-        console.log('FormData:', Array.from(formData.entries()));
-
         const response = await fetch(url, {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text, targetLang })
         });
-
-        console.log('Response status:', response.status);
 
         if (!response.ok) {
             console.error(`HTTP error! status: ${response.status}`);
@@ -106,8 +98,6 @@
         }
 
         const data = await response.json();
-        console.log('Response data:', data);
-
         if (!data.translations || !data.translations.length) {
             console.error('No translations found in the response:', data);
             throw new Error('No translations found in the response');
