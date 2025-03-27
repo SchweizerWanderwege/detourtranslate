@@ -86,12 +86,20 @@
             formData.append('text', text);
             formData.append('target_lang', targetLang);
 
-            const response = await fetch(url, {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            return data.translations[0].text;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.translations[0].text;
+            } catch (error) {
+                console.error('Error fetching translation:', error);
+                return 'Translation error';
+            }
         }
 
         function copyToClipboard(elementId, copyButton) {
