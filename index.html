@@ -79,36 +79,46 @@
         }
 
         async function fetchTranslation(text, targetLang) {
-            const apiKey = '4e27932c-1559-4def-bf2a-9cbc7975badc:fx';
-            const url = `https://api-free.deepl.com/v2/translate`;
-            const formData = new FormData();
-            formData.append('auth_key', apiKey);
-            formData.append('text', text);
-            formData.append('target_lang', targetLang);
+    const apiKey = '4e27932c-1559-4def-bf2a-9cbc7975badc:fx';
+    const url = `https://api-free.deepl.com/v2/translate`;
+    const formData = new FormData();
+    formData.append('auth_key', apiKey);
+    formData.append('text', text);
+    formData.append('target_lang', targetLang);
 
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: formData
-                });
+    try {
+        console.log('Sending request to DeepL API');
+        console.log('URL:', url);
+        console.log('FormData:', Array.from(formData.entries()));
 
-                if (!response.ok) {
-                    console.error(`HTTP error! status: ${response.status}`);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
 
-                const data = await response.json();
-                if (!data.translations || !data.translations.length) {
-                    console.error('No translations found in the response:', data);
-                    throw new Error('No translations found in the response');
-                }
+        console.log('Response status:', response.status);
 
-                return data.translations[0].text;
-            } catch (error) {
-                console.error('Error fetching translation:', error);
-                return 'Translation error';
-            }
+        if (!response.ok) {
+            console.error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            console.error('Response error text:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        if (!data.translations || !data.translations.length) {
+            console.error('No translations found in the response:', data);
+            throw new Error('No translations found in the response');
+        }
+
+        return data.translations[0].text;
+    } catch (error) {
+        console.error('Error fetching translation:', error);
+        return 'Translation error';
+    }
+}
 
         function copyToClipboard(elementId, copyButton) {
             const textToCopy = document.getElementById(elementId).innerText;
